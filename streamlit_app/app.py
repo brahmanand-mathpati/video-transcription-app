@@ -114,9 +114,20 @@ section[data-testid="stSidebar"] { background: var(--surface); border-right: 1px
 }
 .stButton > button:hover, .stDownloadButton > button:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
 
-div[data-testid="stExpander"], div[data-testid="stStatusWidget"] {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+div[data-testid="stExpander"], div[data-testid="stStatusWidget"],
+div[data-testid="stVerticalBlockBorderWrapper"] {
+  background: var(--surface); border: 1px solid var(--line) !important; border-radius: 12px;
 }
+div[data-testid="stVerticalBlockBorderWrapper"] { padding: 4px 6px; }
+
+.block-container { max-width: 880px; padding-top: 2rem; }
+
+[data-baseweb="select"] > div { background: var(--surface) !important; border-color: var(--line) !important; border-radius: 8px !important; }
+[data-testid="stCheckbox"] { background: transparent; }
+
+.ls-step b { display: block; font-family: 'IBM Plex Mono', monospace; font-size: .72rem; color: var(--teal); letter-spacing: .04em; margin-bottom: 4px; }
+.ls-step h4 { font-family: 'Bricolage Grotesque', sans-serif; margin: 0 0 4px; }
+.ls-step p { color: var(--muted); font-size: .88rem; margin: 0; }
 </style>
 <div class="ls-brand"><span class="dot"></span><span class="name">Localscript</span><span class="tag">Streamlit edition</span></div>
 <div class="ls-badges">
@@ -134,21 +145,45 @@ st.caption(
 
 with st.sidebar:
     st.header("Options")
-    model_label = st.selectbox("Model", list(MODELS.keys()), index=1)
-    lang_label = st.selectbox("Spoken language", list(LANGUAGES.keys()), index=0)
-    translate = st.checkbox("Translate the speech into English")
-    with_time = st.checkbox("Add timestamps to .txt export", value=True)
-    st.markdown("---")
+    with st.container(border=True):
+        model_label = st.selectbox("Model", list(MODELS.keys()), index=1)
+        lang_label = st.selectbox("Spoken language", list(LANGUAGES.keys()), index=0)
+        translate = st.checkbox("Translate the speech into English")
+        with_time = st.checkbox("Add timestamps to .txt export", value=True)
     st.caption(
         "Free hosting tiers have no GPU and limited CPU/RAM. "
         "Prefer Tiny or Base for anything over a few minutes long, "
         "and upload audio-only files (e.g. .mp3) for long recordings."
     )
 
-uploaded = st.file_uploader(
-    "Drop a video or audio file",
-    type=["mp4", "mov", "webm", "mkv", "mp3", "wav", "m4a"],
-)
+with st.container(border=True):
+    uploaded = st.file_uploader(
+        "Drop a video or audio file",
+        type=["mp4", "mov", "webm", "mkv", "mp3", "wav", "m4a"],
+    )
+    if uploaded is None:
+        st.caption("Up to 200 MB · MP4, MOV, WEBM, MKV, MP3, WAV, M4A")
+
+if "rows" not in st.session_state:
+    st.session_state.rows = []
+if "fname" not in st.session_state:
+    st.session_state.fname = None
+
+if uploaded is None and not st.session_state.rows:
+    st.markdown("<br>", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    steps = [
+        ("Step 01", "Upload a file", "Drop a video or audio file above, or pick one from your device."),
+        ("Step 02", "Whisper transcribes it", "Runs on this server with faster-whisper. Lines stream in as they're produced."),
+        ("Step 03", "Edit and export", "Fix any line in the table, then download TXT, SRT, or VTT."),
+    ]
+    for col, (num, title, body) in zip((c1, c2, c3), steps):
+        with col:
+            with st.container(border=True):
+                st.markdown(
+                    f'<div class="ls-step"><b>{num}</b><h4>{title}</h4><p>{body}</p></div>',
+                    unsafe_allow_html=True,
+                )
 
 if "rows" not in st.session_state:
     st.session_state.rows = []
