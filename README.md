@@ -6,7 +6,7 @@ Turn a video or audio file into a timestamped, editable transcript. Built two wa
 
 ## Two ways to use it
 
-| | [`website/`](website) | [`streamlit_app/`](streamlit_app) |
+| | [`website/`](website) (static, no build step) | [`streamlit_app/`](streamlit_app) |
 |---|---|---|
 | Runs | Entirely in your browser (Whisper via [transformers.js](https://github.com/huggingface/transformers.js)) | On a server (Whisper via [faster-whisper](https://github.com/SYSTRAN/faster-whisper)) |
 | Your file | Never leaves your device | Uploaded to wherever the app runs |
@@ -39,6 +39,25 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 See [`streamlit_app/README.md`](streamlit_app/README.md) for deployment to Streamlit Community Cloud.
+
+## Code layout (`website/`)
+
+```
+website/
+├── index.html        markup only
+├── css/styles.css     all styling (light/dark theme via CSS variables)
+└── js/
+    ├── main.js        app entry point — owns state, wires up every feature
+    ├── ui.js          DOM rendering: transcript rows, history list, toasts
+    ├── db.js          data layer — transcript history (IndexedDB)
+    ├── audio.js       turns a dropped file into 16 kHz PCM (3 routes, up to ~2h)
+    ├── formats.js     TXT/SRT/VTT export + zero-dependency ZIP writer
+    ├── theme.js       dark/light mode
+    ├── recorder.js    microphone recording feature
+    ├── queue.js       batch file queue feature
+    └── worker.js      the Whisper transcription engine (runs off the main thread)
+```
+Plain ES modules, no bundler or build step — open `index.html` through a local server (see Quick start) and the browser resolves the imports directly.
 
 ## Why both exist
 
