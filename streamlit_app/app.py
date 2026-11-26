@@ -80,7 +80,53 @@ def build_vtt(rows) -> str:
     return "\n".join(blocks)
 
 
-st.title("🎙️ Localscript — Streamlit edition")
+st.markdown(
+    """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --teal: #0B6E6E; --teal-dark: #084F50; --amber: #F4B63F; --amber-soft: #2A2516;
+  --bg: #0E1A1D; --surface: #152629; --ink: #EAF3F1; --muted: #9FB6B7; --line: #2A4044;
+}
+html, body, [class^="css"], [class*=" css"] { font-family: 'IBM Plex Sans', sans-serif; }
+.stApp { background: var(--bg); color: var(--ink); }
+h1, h2, h3 { font-family: 'Bricolage Grotesque', sans-serif !important; letter-spacing: -0.01em; }
+
+section[data-testid="stSidebar"] { background: var(--surface); border-right: 1px solid var(--line); }
+
+.ls-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+.ls-brand .dot { width: 14px; height: 14px; background: var(--teal); border-radius: 50% 50% 50% 0; display: inline-block; }
+.ls-brand .name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; }
+.ls-brand .tag { font-size: .72rem; color: var(--muted); background: var(--bg); border: 1px solid var(--line); padding: 2px 10px; border-radius: 99px; }
+.ls-badges { display: flex; gap: 8px; margin: 10px 0 16px; flex-wrap: wrap; }
+.ls-badge { font-size: .78rem; color: var(--teal); background: var(--amber-soft); border: 1px solid var(--amber); padding: 4px 10px; border-radius: 99px; }
+
+[data-testid="stFileUploaderDropzone"] {
+  background: var(--surface) !important;
+  border: 2px dashed var(--teal) !important;
+  border-radius: 16px !important;
+}
+[data-testid="stFileUploaderDropzone"]:hover { border-color: var(--amber) !important; }
+
+.stButton > button, .stDownloadButton > button {
+  background: var(--teal); color: #fff; border: 1px solid var(--teal); border-radius: 8px; font-weight: 500;
+}
+.stButton > button:hover, .stDownloadButton > button:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+
+div[data-testid="stExpander"], div[data-testid="stStatusWidget"] {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+}
+</style>
+<div class="ls-brand"><span class="dot"></span><span class="name">Localscript</span><span class="tag">Streamlit edition</span></div>
+<div class="ls-badges">
+  <span class="ls-badge">⚡ Hosted transcription</span>
+  <span class="ls-badge">🌐 14 languages</span>
+  <span class="ls-badge">📝 TXT · SRT · VTT</span>
+</div>
+""",
+    unsafe_allow_html=True,
+)
 st.caption(
     "Upload a video or audio file and get a timestamped transcript. "
     "Unlike the browser version, the file is processed on this server, not on your device."
