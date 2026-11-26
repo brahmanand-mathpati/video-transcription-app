@@ -1,8 +1,13 @@
 # Localscript — video/audio to text
 
-Turn a video or audio file into a timestamped, editable transcript. Built two ways, same idea: **your recording stays private**.
+Turn a video or audio file into a timestamped, editable transcript. Built two ways, same idea: **your recording stays private** — until you choose the hosted one.
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-0B6E6E.svg)](LICENSE)
+[![Live demo](https://img.shields.io/badge/Streamlit-live%20demo-F4B63F)](https://video-transcription-app-2027.streamlit.app/)
 
 ![Localscript screenshot](website/assets/screenshot.jpg)
+
+**Try it now:** [video-transcription-app-2027.streamlit.app](https://video-transcription-app-2027.streamlit.app/) (hosted, Streamlit edition) — or run the [website](website) locally for the fully private, nothing-uploaded version (see Quick start below).
 
 ## Two ways to use it
 
@@ -13,7 +18,7 @@ Turn a video or audio file into a timestamped, editable transcript. Built two wa
 | Hosting | Any static host, free | Streamlit Community Cloud, free |
 | Best for | Privacy, no install | A hosted link you can share, Python-based workflows |
 
-### Features
+## Features
 
 - Drop a file, drag-drop several to queue them, or record straight from your microphone
 - 14 languages, with automatic detection and optional translation to English
@@ -62,6 +67,19 @@ Plain ES modules, no bundler or build step — open `index.html` through a local
 ## Why both exist
 
 The website is the privacy-first default — nothing you record or upload ever leaves your machine. The Streamlit app trades that off for a shareable hosted link and a Python-based pipeline, useful when you want to send someone a URL instead of a file.
+
+## Contributing
+
+Issues and pull requests are welcome.
+
+1. **Fork and clone** the repo, then pick the app you're changing — `website/` or `streamlit_app/`. They're independent; a change to one doesn't require touching the other.
+2. **Website changes:** edit the relevant module under `website/js/` (keep the one-feature-per-file split: UI rendering in `ui.js`, history in `db.js`, export logic in `formats.js`, etc. — don't reach into another module's internals). Run it locally (`cd website && python -m http.server 8000`) and check the browser console is clean before opening a PR.
+3. **Streamlit changes:** edit `streamlit_app/app.py`. Syntax-check with `python -m py_compile streamlit_app/app.py`, and run it locally (`streamlit run app.py`) if you have `ffmpeg` and the dependencies installed.
+4. **Keep the privacy boundary intact.** The website must never send a user's file or transcript anywhere — if a feature needs a network call, it has to be opt-in and clearly labeled. The Streamlit app already uploads by design, so this only applies to `website/`.
+5. **Commit messages:** short, imperative, describe the *why* when it's not obvious from the diff.
+6. Open a PR describing what changed and how you tested it (a screenshot or GIF helps for UI changes).
+
+Found a bug or have a feature idea but don't want to build it yourself? Open an issue — include your browser/OS for website bugs, or the error message for Streamlit ones.
 
 ## License
 
